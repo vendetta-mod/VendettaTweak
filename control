@@ -1,0 +1,9 @@
+Package: mod.vendetta
+Name: VendettaTweak
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome Orion tweak!
+Maintainer: Jack Matthews
+Author: Jack Matthews
+Section: Tweaks
+Depends: ${ORION}, firmware (>= 14.0)
