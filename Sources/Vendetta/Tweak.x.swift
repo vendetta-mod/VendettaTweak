@@ -1,5 +1,5 @@
 import Orion
-import VendettaTweakC
+import VendettaC
 
 class LoadVendettaHook: ClassHook<RCTCxxBridge> {
 

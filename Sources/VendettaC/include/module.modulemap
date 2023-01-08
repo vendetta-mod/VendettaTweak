@@ -1,4 +1,4 @@
-module VendettaTweakC {
+module VendettaC {
     umbrella "."
     export *
 }

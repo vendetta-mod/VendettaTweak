@@ -1,9 +1,9 @@
 Package: mod.vendetta
-Name: VendettaTweak
+Name: Vendetta
 Version: 0.0.1
 Architecture: iphoneos-arm
-Description: An awesome Orion tweak!
-Maintainer: Jack Matthews
-Author: Jack Matthews
+Description: A mod for Discord's mobile apps.
+Maintainer: FieryFlames
+Author: FieryFlames
 Section: Tweaks
 Depends: ${ORION}, firmware (>= 14.0)
