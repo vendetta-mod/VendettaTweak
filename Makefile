@@ -13,4 +13,9 @@ ifdef OVERRIDE_DOWNLOAD_URL
 Vendetta_CFLAGS += -DOVERRIDE_DOWNLOAD_URL=@\"$(OVERRIDE_DOWNLOAD_URL)\"
 endif
 
+BUNDLE_NAME = VendettaPatches
+VendettaPatches_RESOURCE_DIRS = "VendettaXposed/App/src/main/assets/js"
+VendettaPatches_INSTALL_PATH = "/Library/Application\ Support/Vendetta"
+
 include $(THEOS_MAKE_PATH)/tweak.mk
+include $(THEOS_MAKE_PATH)/bundle.mk
