@@ -1,5 +1,6 @@
 import Orion
 import VendettaC
+import os
 
 class LoadVendettaHook: ClassHook<RCTCxxBridge> {
 
@@ -7,11 +8,33 @@ class LoadVendettaHook: ClassHook<RCTCxxBridge> {
     // Fake URL that the modules patch and Vendetta came from
     let source = URL(string: "vendetta")!
 
-    // Load modules patch
-    let modulesPatch: String =
-      "const oldObjectCreate = this.Object.create; const win = this; win.Object.create = (...args) => { const obj = oldObjectCreate.apply(win.Object, args); if (args[0] === null) { win.modules = obj; win.Object.create = oldObjectCreate; } return obj; };"
-    let modulesPatchData = modulesPatch.data(using: .utf8)!
-    orig.executeApplicationScript(modulesPatchData, url: source, async: false)
+    // Determine patches bundle path
+    let vendettaPatchesBundlePath =
+      FileManager.default.fileExists(
+        atPath: "/Library/Application Support/Vendetta/VendettaPatches.bundle")
+      ? "/Library/Application Support/Vendetta/VendettaPatches.bundle"
+      : "\(Bundle.main.bundleURL.path)/VendettaPatches.bundle"
+
+    // Load patches bundle
+    let vendettaPatchesBundle = Bundle(path: vendettaPatchesBundlePath)!
+
+    // List of patches to apply
+    let patches = ["modules", "devtools"]
+
+    // Apply patches
+    for patch in patches {
+      // Load patch
+      if let patchPath = vendettaPatchesBundle.path(forResource: patch, ofType: "js") {
+        do {
+          // Load patch
+          let patchString = try String(contentsOfFile: patchPath)
+          if let patchData = patchString.data(using: .utf8) {
+            // Load it
+            orig.executeApplicationScript(patchData, url: source, async: false)
+          }
+        } catch {}
+      }
+    }
 
     // Load Discord
     orig.executeApplicationScript(script, url: url, async: async)
