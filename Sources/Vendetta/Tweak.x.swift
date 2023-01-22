@@ -45,8 +45,18 @@ class LoadVendettaHook: ClassHook<RCTCxxBridge> {
     let request = URLRequest(url: releaseUrl, cachePolicy: .reloadIgnoringCacheData)
 
     // Try to load Vendetta
+    let vendettaPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+      .appendingPathComponent("vendetta.js")
+    
+    // Download Vendetta
     do {
       let vendetta = try NSURLConnection.sendSynchronousRequest(request, returning: nil)
+      try vendetta.write(to: vendettaPath)
+    } catch {}
+
+    // Load Vendetta
+    do {
+      let vendetta = try Data(contentsOf: vendettaPath)
       orig.executeApplicationScript(vendetta, url: source, async: async)
     } catch {}
   }
