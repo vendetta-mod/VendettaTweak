@@ -9,10 +9,6 @@ Vendetta_FILES = $(shell find Sources/Vendetta -name '*.swift') $(shell find Sou
 Vendetta_SWIFTFLAGS = -ISources/VendettaC/include
 Vendetta_CFLAGS = -fobjc-arc -ISources/VendettaC/include
 
-ifdef OVERRIDE_DOWNLOAD_URL
-Vendetta_CFLAGS += -DOVERRIDE_DOWNLOAD_URL=@\"$(OVERRIDE_DOWNLOAD_URL)\"
-endif
-
 BUNDLE_NAME = VendettaPatches
 VendettaPatches_RESOURCE_DIRS = "VendettaXposed/App/src/main/assets/js"
 VendettaPatches_INSTALL_PATH = "/Library/Application\ Support/Vendetta"

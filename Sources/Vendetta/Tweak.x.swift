@@ -41,7 +41,7 @@ class LoadVendettaHook: ClassHook<RCTCxxBridge> {
 
     // Vendetta URL and URLRequest
     let releaseUrl = URL(
-      string: DOWNLOAD_URL)!
+      string: "https://raw.githubusercontent.com/vendetta-mod/builds/master/vendetta.js")!
     let request = URLRequest(url: releaseUrl, cachePolicy: .reloadIgnoringCacheData)
 
     // Try to load Vendetta
