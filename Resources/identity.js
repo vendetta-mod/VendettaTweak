@@ -1,1 +1,1 @@
-this.__vendetta_loader={name:"VendettaTweak",features:{loaderConfig:false,devtools:{prop:"__vendetta_rdc",version:"4.27.1"}}};
+this.__vendetta_loader={name:"VendettaTweak",features:{loaderConfig:true,devtools:{prop:"__vendetta_rdc",version:"4.27.1"}}};
