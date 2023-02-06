@@ -19,7 +19,7 @@ class LoadVendettaHook: ClassHook<RCTCxxBridge> {
     let vendettaPatchesBundle = Bundle(path: vendettaPatchesBundlePath)!
 
     // List of patches to apply
-    let patches = ["modules", "devtools"]
+    let patches = ["modules", "identity", "devtools"]
 
     // Apply patches
     for patch in patches {

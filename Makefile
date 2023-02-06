@@ -10,8 +10,8 @@ Vendetta_SWIFTFLAGS = -ISources/VendettaC/include
 Vendetta_CFLAGS = -fobjc-arc -ISources/VendettaC/include
 
 BUNDLE_NAME = VendettaPatches
-VendettaPatches_RESOURCE_DIRS = "VendettaXposed/App/src/main/assets/js"
-VendettaPatches_INSTALL_PATH = "/Library/Application\ Support/Vendetta"
+VendettaPatches_RESOURCE_DIRS = VendettaXposed/App/src/main/assets/js Resources
+VendettaPatches_INSTALL_PATH = /Library/Application Support/Vendetta
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 include $(THEOS_MAKE_PATH)/bundle.mk
