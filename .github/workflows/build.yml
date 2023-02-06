@@ -27,6 +27,8 @@ jobs:
 
       - name: Prepare Theos
         uses: Randomblock1/theos-action@v1.2
+        with:
+          orion: "true"
 
       - name: Build package
         run: |
