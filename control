@@ -1,0 +1,9 @@
+Package: dev.beefers.vendetta
+Name: VendettaTweak
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome Orion tweak!
+Maintainer: FieryFlames
+Author: FieryFlames
+Section: Tweaks
+Depends: ${ORION}, firmware (>= 12.2)
