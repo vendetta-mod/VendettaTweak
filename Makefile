@@ -9,4 +9,7 @@ VendettaTweak_FILES = $(shell find Sources/VendettaTweak -name '*.swift') $(shel
 VendettaTweak_SWIFTFLAGS = -ISources/VendettaTweakC/include
 VendettaTweak_CFLAGS = -fobjc-arc -ISources/VendettaTweakC/include
 
+VendettaTweak_BUNDLE_NAME = VendettaPatches
+VendettaTweak_BUNDLE_RESOURCE_DIRS = VendettaXposed/App/src/main/assets/js Resources
+
 include $(THEOS_MAKE_PATH)/tweak.mk
