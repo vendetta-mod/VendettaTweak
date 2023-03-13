@@ -26,7 +26,42 @@ class LoadHook: ClassHook<RCTCxxBridge> {
       }
     }
 
+    let documentDirectory = try! FileManager.default.url(
+      for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+
+    var vendetta = try? Data(contentsOf: documentDirectory.appendingPathComponent("vendetta.js"))
+
+    let group = DispatchGroup()
+
+    group.enter()
+    os_log("Fetching vendetta.js", log: vendettaLog, type: .info)
+    let vendettaUrl = URL(
+      string: "https://raw.githubusercontent.com/vendetta-mod/builds/master/vendetta.js")!
+    let vendettaRequest = URLRequest(
+      url: vendettaUrl, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 3.0)
+
+    let vendettaTask = URLSession.shared.dataTask(with: vendettaRequest) { data, response, error in
+      if data != nil {
+        os_log("Successfully fetched vendetta.js", log: vendettaLog, type: .debug)
+        vendetta = data
+
+        try? vendetta?.write(to: documentDirectory.appendingPathComponent("vendetta.js"))
+      }
+
+      group.leave()
+    }
+
+    vendettaTask.resume()
+    group.wait()
+
     os_log("Executing original script", log: vendettaLog, type: .info)
     orig.executeApplicationScript(script, url: url, async: false)
+
+    if vendetta != nil {
+      os_log("Executing vendetta.js", log: vendettaLog, type: .info)
+      orig.executeApplicationScript(vendetta!, url: source, async: false)
+    } else {
+      os_log("Unable to fetch vendetta.js", log: vendettaLog, type: .error)
+    }
   }
 }
