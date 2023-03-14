@@ -37,15 +37,25 @@ class LoadHook: ClassHook<RCTCxxBridge> {
     os_log("Fetching vendetta.js", log: vendettaLog, type: .info)
     let vendettaUrl = URL(
       string: "https://raw.githubusercontent.com/vendetta-mod/builds/master/vendetta.js")!
-    let vendettaRequest = URLRequest(
+    var vendettaRequest = URLRequest(
       url: vendettaUrl, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 3.0)
 
+    if let vendettaEtag = try? String(
+      contentsOf: documentDirectory.appendingPathComponent("vendetta_etag.txt")), vendetta != nil
+    {
+      vendettaRequest.addValue(vendettaEtag, forHTTPHeaderField: "If-None-Match")
+    }
+
     let vendettaTask = URLSession.shared.dataTask(with: vendettaRequest) { data, response, error in
-      if data != nil {
+      if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
         os_log("Successfully fetched vendetta.js", log: vendettaLog, type: .debug)
         vendetta = data
-
         try? vendetta?.write(to: documentDirectory.appendingPathComponent("vendetta.js"))
+
+        let etag = httpResponse.allHeaderFields["Etag"] as? String
+        try? etag?.write(
+          to: documentDirectory.appendingPathComponent("vendetta_etag.txt"), atomically: true,
+          encoding: .utf8)
       }
 
       group.leave()
