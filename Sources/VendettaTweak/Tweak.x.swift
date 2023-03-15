@@ -82,6 +82,12 @@ class LoadHook: ClassHook<RCTCxxBridge> {
     os_log("Executing original script", log: vendettaLog, type: .info)
     orig.executeApplicationScript(script, url: url, async: false)
 
+    if let themeString = try? String(
+      contentsOf: documentDirectory.appendingPathComponent("vendetta_theme.json"))
+    {
+      orig.executeApplicationScript(
+        "this.__vendetta_theme=\(themeString)".data(using: .utf8)!, url: source, async: false)
+    }
     if vendetta != nil {
       os_log("Executing vendetta.js", log: vendettaLog, type: .info)
       orig.executeApplicationScript(vendetta!, url: source, async: false)
