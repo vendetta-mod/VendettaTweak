@@ -26,8 +26,7 @@ class LoadHook: ClassHook<RCTCxxBridge> {
       }
     }
 
-    let documentDirectory = try! FileManager.default.url(
-      for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+    let documentDirectory = getDocumentDirectory()
 
     var vendetta = try? Data(contentsOf: documentDirectory.appendingPathComponent("vendetta.js"))
 
