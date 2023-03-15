@@ -15,10 +15,17 @@ class LoadHook: ClassHook<RCTCxxBridge> {
   func executeApplicationScript(_ script: Data, url: URL, async: Bool) {
     os_log("executeApplicationScript called!", log: vendettaLog, type: .debug)
 
+    let loaderConfig = getLoaderConfig()
+
     let vendettaPatchesBundle = Bundle(path: vendettaPatchesBundlePath)!
+    var patches = ["modules", "identity"]
+    if loaderConfig.loadReactDevTools {
+      os_log("DevTools patch enabled", log: vendettaLog, type: .info)
+      patches.append("devtools")
+    }
 
     os_log("Executing patches", log: vendettaLog, type: .info)
-    for patch in ["modules", "devtools", "identity"] {
+    for patch in patches {
       if let patchPath = vendettaPatchesBundle.url(forResource: patch, withExtension: "js") {
         let patchData = try! Data(contentsOf: patchPath)
         os_log("Executing %{public}@ patch", log: vendettaLog, type: .debug, patch)
@@ -33,9 +40,18 @@ class LoadHook: ClassHook<RCTCxxBridge> {
     let group = DispatchGroup()
 
     group.enter()
+    var vendettaUrl: URL
+    if loaderConfig.customLoadUrl.enabled {
+      os_log(
+        "Custom load URL enabled, with URL %{public}@ ", log: vendettaLog, type: .info,
+        loaderConfig.customLoadUrl.url.absoluteString)
+      vendettaUrl = loaderConfig.customLoadUrl.url
+    } else {
+      vendettaUrl = URL(
+        string: "https://raw.githubusercontent.com/vendetta-mod/builds/master/vendetta.js")!
+    }
+
     os_log("Fetching vendetta.js", log: vendettaLog, type: .info)
-    let vendettaUrl = URL(
-      string: "https://raw.githubusercontent.com/vendetta-mod/builds/master/vendetta.js")!
     var vendettaRequest = URLRequest(
       url: vendettaUrl, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 3.0)
 
