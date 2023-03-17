@@ -7,7 +7,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [macos-latest, ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v3
@@ -26,7 +26,7 @@ jobs:
           key: ${{ runner.os }}-${{ env.upstream_heads }}
 
       - name: Prepare Theos
-        uses: Randomblock1/theos-action@v1.2
+        uses: Randomblock1/theos-action@v1.3
         with:
           orion: "true"
 
