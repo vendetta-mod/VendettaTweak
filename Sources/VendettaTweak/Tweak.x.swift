@@ -87,7 +87,9 @@ class LoadHook: ClassHook<RCTCxxBridge> {
     {
       orig.executeApplicationScript(
         "this.__vendetta_theme=\(themeString)".data(using: .utf8)!, url: source, async: false)
+        swizzleDCDThemeColor()
     }
+
     if vendetta != nil {
       os_log("Executing vendetta.js", log: vendettaLog, type: .info)
       orig.executeApplicationScript(vendetta!, url: source, async: false)
