@@ -58,7 +58,7 @@ func hexToUIColor(_ hex: String) -> UIColor? {
 func swizzleDCDThemeColor(_ semanticColors: [String: [String]]) {
   os_log("Swizzling DCDThemeColor", log: vendettaLog, type: .info)
 
-  let DCDTheme = NSClassFromString("DCDTheme")!
+  let DCDTheme: AnyClass = NSClassFromString("DCDTheme")!
   let dcdThemeTarget: AnyClass = object_getClass(DCDTheme)!
 
   let themeIndexSelector = NSSelectorFromString("themeIndex")
@@ -74,12 +74,12 @@ func swizzleDCDThemeColor(_ semanticColors: [String: [String]]) {
   os_log("Found DCDThemeColor", log: vendettaLog, type: .debug)
 
   var methodCount: UInt32 = 0
-  let methods = class_copyMethodList(target, &methodCount)
+  let methods = class_copyMethodList(target, &methodCount)!
 
   os_log("DCDThemeColor has %{public}d methods", log: vendettaLog, type: .debug, methodCount)
 
   for i in 0..<Int(methodCount) {
-    let method = methods![i]
+    let method = methods[i]
     let selector = method_getName(method)
     let methodName = NSStringFromSelector(selector)
     os_log(
@@ -124,12 +124,12 @@ func swizzleUIColor(_ rawColors: [String: String]) {
   os_log("Found UIColor", log: vendettaLog, type: .debug)
 
   var methodCount: UInt32 = 0
-  let methods = class_copyMethodList(target, &methodCount)
+  let methods = class_copyMethodList(target, &methodCount)!
 
   os_log("UIColor has %{public}d methods", log: vendettaLog, type: .debug, methodCount)
 
   for i in 0..<Int(methodCount) {
-    let method = methods![i]
+    let method = methods[i]
     let selector = method_getName(method)
     let methodName = NSStringFromSelector(selector)
     os_log(
