@@ -5,10 +5,12 @@ import os
 let vendettaLog = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "vendetta")
 let source = URL(string: "vendetta")!
 
+let install_prefix = String(cString: get_install_prefix())
+
 let vendettaPatchesBundlePath =
   FileManager.default.fileExists(
-    atPath: "\(install_prefix())/Library/Application Support/VendettaTweak/VendettaPatches.bundle")
-  ? "\(install_prefix())/Library/Application Support/VendettaTweak/VendettaPatches.bundle"
+    atPath: "\(install_prefix)/Library/Application Support/VendettaTweak/VendettaPatches.bundle")
+  ? "\(install_prefix)/Library/Application Support/VendettaTweak/VendettaPatches.bundle"
   : "\(Bundle.main.bundleURL.path)/VendettaPatches.bundle"
 
 class LoadHook: ClassHook<RCTCxxBridge> {

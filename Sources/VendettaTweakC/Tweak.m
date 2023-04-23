@@ -1,6 +1,6 @@
 #import <Orion/Orion.h>
 
-const char * const _Nonnull install_prefix(void) {
+const char * const _Nonnull get_install_prefix(void) {
     return THEOS_PACKAGE_INSTALL_PREFIX;
 }
 
