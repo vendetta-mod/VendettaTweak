@@ -39,4 +39,15 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: "Package built by ${{ matrix.os }}"
-          path: ${{ github.workspace }}/packages/*.deb
+          path: ${{ github.workspace }}/packages/*-arm.deb
+
+      - name: Build rootless package
+        run: |
+          rm -f packages/*
+          make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+
+      - name: Upload rootless package
+        uses: actions/upload-artifact@v3
+        with:
+          name: "Rootless package built by ${{ matrix.os }}"
+          path: ${{ github.workspace }}/packages/*-arm64.deb
