@@ -31,7 +31,7 @@ class LoadHook: ClassHook<RCTCxxBridge> {
       if let patchPath = vendettaPatchesBundle.url(forResource: patch, withExtension: "js") {
         let patchData = try! Data(contentsOf: patchPath)
         os_log("Executing %{public}@ patch", log: vendettaLog, type: .debug, patch)
-        orig.executeApplicationScript(patchData, url: source, async: false)
+        orig.executeApplicationScript(patchData, url: source, async: true)
       }
     }
 
@@ -82,18 +82,18 @@ class LoadHook: ClassHook<RCTCxxBridge> {
     group.wait()
 
     os_log("Executing original script", log: vendettaLog, type: .info)
-    orig.executeApplicationScript(script, url: url, async: false)
+    orig.executeApplicationScript(script, url: url, async: async)
 
     if let themeString = try? String(
       contentsOf: documentDirectory.appendingPathComponent("vendetta_theme.json"))
     {
       orig.executeApplicationScript(
-        "globalThis.__vendetta_theme=\(themeString)".data(using: .utf8)!, url: source, async: false)
+        "globalThis.__vendetta_theme=\(themeString)".data(using: .utf8)!, url: source, async: async)
     }
 
     if vendetta != nil {
       os_log("Executing vendetta.js", log: vendettaLog, type: .info)
-      orig.executeApplicationScript(vendetta!, url: source, async: false)
+      orig.executeApplicationScript(vendetta!, url: source, async: async)
     } else {
       os_log("Unable to fetch vendetta.js", log: vendettaLog, type: .error)
     }
