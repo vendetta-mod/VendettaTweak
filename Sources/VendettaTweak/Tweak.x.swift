@@ -89,10 +89,6 @@ class LoadHook: ClassHook<RCTCxxBridge> {
     {
       orig.executeApplicationScript(
         "globalThis.__vendetta_theme=\(themeString)".data(using: .utf8)!, url: source, async: false)
-      let theme = try? JSONDecoder().decode(Theme.self, from: themeString.data(using: .utf8)!)
-      if let semanticColors = theme?.data.semanticColors { swizzleDCDThemeColor(semanticColors) }
-      if let rawColors = theme?.data.rawColors { swizzleUIColor(rawColors) }
-
     }
 
     if vendetta != nil {
@@ -102,4 +98,15 @@ class LoadHook: ClassHook<RCTCxxBridge> {
       os_log("Unable to fetch vendetta.js", log: vendettaLog, type: .error)
     }
   }
+}
+
+struct VendettaTweak: Tweak {
+    func tweakDidActivate() {
+      if let themeData = try? Data(
+      contentsOf: documentDirectory.appendingPathComponent("vendetta_theme.json")) {
+        let theme = try? JSONDecoder().decode(Theme.self, from: themeData)
+        if let semanticColors = theme?.data.semanticColors { swizzleDCDThemeColor(semanticColors) }
+        if let rawColors = theme?.data.rawColors { swizzleUIColor(rawColors) }
+      }
+    }
 }
