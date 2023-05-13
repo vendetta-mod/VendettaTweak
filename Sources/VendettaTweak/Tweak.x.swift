@@ -88,7 +88,7 @@ class LoadHook: ClassHook<RCTCxxBridge> {
       contentsOf: documentDirectory.appendingPathComponent("vendetta_theme.json"))
     {
       orig.executeApplicationScript(
-        "this.__vendetta_theme=\(themeString)".data(using: .utf8)!, url: source, async: false)
+        "globalThis.__vendetta_theme=\(themeString)".data(using: .utf8)!, url: source, async: false)
       let theme = try? JSONDecoder().decode(Theme.self, from: themeString.data(using: .utf8)!)
       if let semanticColors = theme?.data.semanticColors { swizzleDCDThemeColor(semanticColors) }
       if let rawColors = theme?.data.rawColors { swizzleUIColor(rawColors) }
