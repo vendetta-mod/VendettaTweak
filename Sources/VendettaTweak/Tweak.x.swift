@@ -1,7 +1,6 @@
 import Orion
 import VendettaTweakC
 import os
-import Foundation
 
 let vendettaLog = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "vendetta")
 let source = URL(string: "vendetta")!
