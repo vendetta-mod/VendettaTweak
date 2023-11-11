@@ -1,6 +1,6 @@
 # VendettaTweak
 
-A rootful/rootless tweak to inject Vendetta into a Discord IPA.
+A rootful/rootless tweak to inject Vendetta into Discord.
 
 ## Installation
 
