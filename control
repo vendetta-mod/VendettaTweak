@@ -1,6 +1,6 @@
 Package: dev.beefers.vendetta
 Name: Vendetta
-Version: 0.0.1
+Version: 0.0.2
 Architecture: iphoneos-arm
 Description: A mod for Discord's mobile apps.
 Maintainer: FieryFlames

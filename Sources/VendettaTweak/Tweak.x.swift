@@ -1,6 +1,7 @@
 import Orion
 import VendettaTweakC
 import os
+import Foundation
 
 let vendettaLog = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "vendetta")
 let source = URL(string: "vendetta")!
@@ -12,6 +13,20 @@ let vendettaPatchesBundlePath =
     atPath: "\(install_prefix)/Library/Application Support/VendettaTweak/VendettaPatches.bundle")
   ? "\(install_prefix)/Library/Application Support/VendettaTweak/VendettaPatches.bundle"
   : "\(Bundle.main.bundleURL.path)/VendettaPatches.bundle"
+
+class FileManagerLoadHook: ClassHook<FileManager> {
+  func containerURLForSecurityApplicationGroupIdentifier(_ groupIdentifier: NSString?) -> URL? {
+    os_log("containerURLForSecurityApplicationGroupIdentifier called! %{public}@ groupIdentifier", log: vendettaLog, type: .debug, groupIdentifier ?? "nil")
+
+    if groupIdentifier != nil {
+      let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+      let lastPath = paths.last!
+      return lastPath.appendingPathComponent("AppGroup")
+    }
+
+    return orig.containerURLForSecurityApplicationGroupIdentifier(groupIdentifier)
+  }
+}
 
 class LoadHook: ClassHook<RCTCxxBridge> {
   func executeApplicationScript(_ script: Data, url: URL, async: Bool) {
