@@ -6,12 +6,27 @@ let vendettaLog = OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "ven
 let source = URL(string: "vendetta")!
 
 let install_prefix = String(cString: get_install_prefix())
+let isJailbroken = FileManager.default.fileExists(atPath: "\(install_prefix)/Library/Application Support/VendettaTweak/VendettaPatches.bundle")
 
-let vendettaPatchesBundlePath =
-  FileManager.default.fileExists(
-    atPath: "\(install_prefix)/Library/Application Support/VendettaTweak/VendettaPatches.bundle")
-  ? "\(install_prefix)/Library/Application Support/VendettaTweak/VendettaPatches.bundle"
-  : "\(Bundle.main.bundleURL.path)/VendettaPatches.bundle"
+let vendettaPatchesBundlePath = if isJailbroken {
+  "\(install_prefix)/Library/Application Support/VendettaTweak/VendettaPatches.bundle"
+} else {
+  "\(Bundle.main.bundleURL.path)/VendettaPatches.bundle"
+}
+
+class FileManagerLoadHook: ClassHook<FileManager> {
+  func containerURLForSecurityApplicationGroupIdentifier(_ groupIdentifier: NSString?) -> URL? {
+    os_log("containerURLForSecurityApplicationGroupIdentifier called! %{public}@ groupIdentifier", log: vendettaLog, type: .debug, groupIdentifier ?? "nil")
+
+    if (isJailbroken) {
+      return orig.containerURLForSecurityApplicationGroupIdentifier(groupIdentifier)
+    }
+
+    let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+    let lastPath = paths.last!
+    return lastPath.appendingPathComponent("AppGroup")
+  }
+}
 
 class LoadHook: ClassHook<RCTCxxBridge> {
   func executeApplicationScript(_ script: Data, url: URL, async: Bool) {
